@@ -16,7 +16,8 @@ exports.init = ->
 
   # Listen for new messages and append them to the screen
   SS.events.on 'newMessage', (message) ->
-    $("<p>#{message}</p>").hide().appendTo('#chatlog').slideDown()
+    elem = $("<p class='command'>#{message.command}</p><p class='output'>#{message.output}</p>")
+    elem.hide().appendTo('#chatlog').fadeIn()
   
   # Show the chat form and bind to the submit action
   # Note how we're passing the message to the server-side method as the first argument
