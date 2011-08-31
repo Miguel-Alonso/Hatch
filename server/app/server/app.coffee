@@ -1,4 +1,6 @@
 # Server-side Code
+sys = require 'sys'
+exec = require('child_process').exec
 
 exports.actions =
 
@@ -8,11 +10,16 @@ exports.actions =
   # Quick Chat Demo
   sendMessage: (message, cb) ->
     if message.length > 0
-      # broadcast to everyone
-      SS.publish.broadcast 'newMessage', {
-        command: message,
-        output: 'sample output'
-      }
-      cb true                                         # Confirm it was sent to the originating client
+      # exec a unix command
+      exec message, (error, stdout, stderr ) ->
+         # broadcast to everyone
+         SS.publish.broadcast 'newMessage', {
+           command: message,
+           error: error,
+           stdout: stdout,
+           stderr: stderr
+         }
+         cb true                                         # Confirm it was sent to the originating client
     else
       cb false
+
