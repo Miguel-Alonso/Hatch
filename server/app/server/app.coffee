@@ -10,6 +10,18 @@ products_observer.on 'message', (channel, msg) ->
   if channel == 'products' then redis.smembers 'products', (err, ids) ->
     SS.publish.broadcast 'products', ids
 
+setInterval(
+	() ->
+		exec 'cm dbquery -t prod -k Product', (error, stdout, stderr ) ->
+			txt = stdout.split "Product) "
+			txt = txt[1...txt.length]
+			results = for name in txt
+				name.replace(/^\s+|\s+$/g,"")
+			redis.sadd 'products', results
+			redis.publish 'products', 'on'
+	, 10000)
+
+
 exports.actions =
 
   init: (cb) ->
