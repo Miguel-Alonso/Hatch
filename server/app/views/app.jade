@@ -4,8 +4,25 @@ html(lang="en")
     != SocketStream
     title cmview
   body
-    #content
-      #activity
-        h3 Recent activity
-        #activitylog
-      p#message Attempting to connect to the server over websockets or flashsockets...
+    #app.container_12
+      div.grid_2
+        #products
+          h2 products
+          div.content
+            p hello
+      div.grid_2
+        #builds
+          h2 builds
+          div.content
+            p cheers
+      div.grid_8
+        #attempts
+          h2 attempts
+          div.content
+            p yo!
+    div.container_12
+      #content.grid_12
+        #activity
+          h3 Recent activity
+          #activitylog
+        p#message Attempting to connect to the server over websockets or flashsockets...

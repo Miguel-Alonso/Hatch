@@ -19,6 +19,9 @@ exports.init = ->
     elem = $(command + (output ? "") + (error ? ""))
     elem.hide().prependTo('#activitylog').fadeIn()
   
+  $('#products').show()
+  $('#builds').show()
+  $('#attempts').show()
   $('#activity').show().submit ->
     message = $('#myMessage').val()
     if message.length > 0
