@@ -5,10 +5,24 @@ Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 SS.socket.on 'disconnect', ->  $('#message').text('SocketStream server is down :-(')
 SS.socket.on 'reconnect', ->   $('#message').text('SocketStream server is up :-)')
 
-cmView = { products: {all: [], selected: []}}
+cmView = { products: {all: [], selected: []}, builds: {all: [], selected: []}}
+
+selectedUpdated = (list) ->
+    child_list = ''
+    if list == 'products'
+       child_list = 'builds'
+    else
+       return
+    tosend = []
+    for item in cmView[list].selected
+        tosend.push item.replace(/'/g,"")
+    SS.server.app.getUpdate list, tosend, (ids) ->
+        cmView[child_list].all = ids
+        generateList(child_list)
 
 generateList = (list) ->
 	query = $('#' + list + ' .query')[0].value
+	console.log 'gen ' + query
 	regexp = new RegExp(query)
 	selected = $("<span></span>")
 	rest = $("<span></span>")
@@ -22,12 +36,14 @@ generateList = (list) ->
 			    item = event.data.item
 			    cmView[list].selected.remove item if item in cmView[list].selected
 			    generateList(list)
+			    selectedUpdated(list)
 		else if query.length is 0 or regexp.test(item)
 			object.appendTo rest
 			object.bind 'click', {item: item}, (event) ->
 			    item = event.data.item
 			    cmView[list].selected.push item if item not in cmView[list].selected
 			    generateList(list)
+			    selectedUpdated(list)
 	$('#' + list + ' .content').empty()
 	selected.appendTo $('#' + list + ' .content')
 	rest.appendTo $('#' + list + ' .content')
@@ -41,9 +57,13 @@ exports.init = ->
     cmView.products.all = response
     generateList('products')
 
-  SS.events.on 'products', (products) ->
+ SS.events.on 'products', (products) ->
     cmView.products.all = products
     generateList('products')
+
+  SS.events.on 'builds', (builds) ->
+    cmView.builds.all = builds
+    generateList('builds')
 
   # Listen for new messages and append them to the screen
   SS.events.on 'newMessage', (message) ->
@@ -56,8 +76,13 @@ exports.init = ->
   $('#products').show()
   $('#builds').show()
   $('#attempts').show()
-  $('#products .query').keyup () ->
+  $('#products .query').keyup(() ->
     generateList('products')
+  )
+
+  $('#builds .query').keyup(() ->
+    generateList('builds')
+  )
 
   $('#activity').show().submit ->
     message = $('#myMessage').val()

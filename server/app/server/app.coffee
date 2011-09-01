@@ -31,6 +31,20 @@ exports.actions =
     redis.smembers 'products', (err, ids) ->
       cb ids
 
+  getUpdate: (list, args, cb) ->
+    if list is 'products'
+      response = []
+      toread = args.length
+      for product in args
+        redis.lrange 'builds:' + product, 0, 1000, (err, ids) ->
+          response = response.concat ids
+          toread -= 1
+          if toread == 0
+            console.log response
+            cb response
+    else
+      cb []
+
   # Quick Chat Demo
   sendMessage: (message, cb) ->
     if message.length > 0
