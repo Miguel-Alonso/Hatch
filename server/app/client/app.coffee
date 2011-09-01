@@ -13,9 +13,8 @@ exports.init = ->
 
   SS.events.on 'products', (products) ->
     html_source = ""
-    ((product) ->
+    for product in products
         html_source += "<p id='" + product + "'>" + product + "</p>"
-    ) product for product in products
     $('#products .content').html(html_source)
 
   # Listen for new messages and append them to the screen
