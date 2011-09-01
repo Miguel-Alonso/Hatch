@@ -17,7 +17,8 @@ setInterval(
 			txt = txt[1...txt.length]
 			results = for name in txt
 				name.replace(/^\s+|\s+$/g,"")
-			redis.sadd 'products', results
+			redis.sadd 'products', results, () -> 
+				
 			redis.publish 'products', 'on'
 	, 10000)
 
