@@ -1,6 +1,18 @@
 # Server-side Code
 sys = require 'sys'
 exec = require('child_process').exec
+redis_lib = require('redis')
+redis = redis_lib.createClient()
+
+products_observer = redis_lib.createClient()
+products_observer.subscribe 'products'
+products_observer.on 'message', (channel, msg) ->
+  if channel == 'products' then redis.smembers 'products', (err, ids) ->
+    SS.publish.broadcast 'newMessage', {
+      command: 'products channel update',
+      stderr: 'count: ' + ids.length,
+      stdout: ids
+    }
 
 exports.actions =
 
