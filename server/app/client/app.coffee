@@ -22,7 +22,6 @@ selectedUpdated = (list) ->
 
 generateList = (list) ->
 	query = $('#' + list + ' .query')[0].value
-	console.log 'gen ' + query
 	regexp = new RegExp(query)
 	selected = $("<span></span>")
 	rest = $("<span></span>")
@@ -57,7 +56,7 @@ exports.init = ->
     cmView.products.all = response
     generateList('products')
 
- SS.events.on 'products', (products) ->
+  SS.events.on 'products', (products) ->
     cmView.products.all = products
     generateList('products')
 
