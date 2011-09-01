@@ -82,13 +82,3 @@ exports.init = ->
   $('#builds .query').keyup(() ->
     generateList('builds')
   )
-
-  $('#activity').show().submit ->
-    message = $('#myMessage').val()
-    if message.length > 0
-      SS.server.app.sendMessage message, (success) ->
-        if success then $('#myMessage').val('') else alert('Unable to send message')
-    else
-      alert('Oops! You must type a message first')
-
-  ### END QUICK CHAT DEMO ####

@@ -45,19 +45,3 @@ exports.actions =
     else
       cb []
 
-  # Quick Chat Demo
-  sendMessage: (message, cb) ->
-    if message.length > 0
-      # exec a unix command
-      exec message, (error, stdout, stderr ) ->
-         # broadcast to everyone
-         SS.publish.broadcast 'newMessage', {
-           command: message,
-           error: error,
-           stdout: stdout,
-           stderr: stderr
-         }
-         cb true                                         # Confirm it was sent to the originating client
-    else
-      cb false
-
