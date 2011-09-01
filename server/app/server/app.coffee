@@ -18,13 +18,15 @@ setInterval(
 			for name in txt
 				redis.sadd 'products', name.replace(/^\s+|\s+$/g,"")
 			redis.publish 'products', 'on'
-	, 10000)
+	, 60 * 60 * 1000)
 
 
 exports.actions =
 
   init: (cb) ->
-    cb "SocketStream version #{SS.version} is up and running. This message was sent over websockets, so everything is working OK."
+    redis.smembers 'products', (err, ids) ->
+      cb ids
+
 
   # Quick Chat Demo
   sendMessage: (message, cb) ->

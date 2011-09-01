@@ -28,11 +28,12 @@ exports.init = ->
 
   # Make a call to the server to retrieve a message
   SS.server.app.init (response) ->
-    $('#message').text(response)
+    cmView.products.all = response
+    generateList('products')
 
   SS.events.on 'products', (products) ->
     cmView.products.all = products
-  	#generateList('products')
+    generateList('products')
 
   # Listen for new messages and append them to the screen
   SS.events.on 'newMessage', (message) ->
