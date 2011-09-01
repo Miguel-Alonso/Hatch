@@ -7,9 +7,7 @@ redis = redis_lib.createClient()
 products_observer = redis_lib.createClient()
 products_observer.subscribe 'products'
 products_observer.on 'message', (channel, msg) ->
-  console.log 'observer'
   if channel == 'products' then redis.smembers 'products', (err, ids) ->
-    console.log 'we got here with: ' + ids
     SS.publish.broadcast 'products', ids
 
 setInterval(
