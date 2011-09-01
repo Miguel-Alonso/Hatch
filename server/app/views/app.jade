@@ -1,0 +1,13 @@
+!!! 5
+html(lang="en")
+  head
+    != SocketStream
+    title cmview
+  body
+    #content
+      form#demo(onsubmit='return false')
+        h3 Unix shell demo
+        h5 Type in shell commands to be executed by remote host. Be careful!
+        input(id='myMessage', type='text', autocomplete='off')
+        #chatlog
+      p#message Attempting to connect to the server over websockets or flashsockets...
