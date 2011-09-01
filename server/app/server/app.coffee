@@ -8,11 +8,7 @@ products_observer = redis_lib.createClient()
 products_observer.subscribe 'products'
 products_observer.on 'message', (channel, msg) ->
   if channel == 'products' then redis.smembers 'products', (err, ids) ->
-    SS.publish.broadcast 'newMessage', {
-      command: 'products channel update',
-      stderr: 'count: ' + ids.length,
-      stdout: ids
-    }
+    SS.publish.broadcast 'products', ids
 
 exports.actions =
 

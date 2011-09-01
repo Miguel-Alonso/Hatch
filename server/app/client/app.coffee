@@ -11,6 +11,13 @@ exports.init = ->
   SS.server.app.init (response) ->
     $('#message').text(response)
 
+  SS.events.on 'products', (products) ->
+    html_source = ""
+    ((product) ->
+        html_source += "<p id='" + product + "'>" + product + "</p>"
+    ) product for product in products
+    $('#products .content').html(html_source)
+
   # Listen for new messages and append them to the screen
   SS.events.on 'newMessage', (message) ->
     command = "<p class='command'>#{message.command}</p>"
@@ -18,7 +25,7 @@ exports.init = ->
     error = "<pre class='stderr'>#{message.stderr}</p>" if message.stderr.length > 0
     elem = $(command + (output ? "") + (error ? ""))
     elem.hide().prependTo('#activitylog').fadeIn()
-  
+
   $('#products').show()
   $('#builds').show()
   $('#attempts').show()
