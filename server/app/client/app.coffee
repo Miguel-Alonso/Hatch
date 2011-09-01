@@ -12,9 +12,10 @@ exports.init = ->
     $('#message').text(response)
 
   SS.events.on 'products', (products) ->
-    html_source = ""
+    html_source = "<select multiple size=30>"
     for product in products
-        html_source += "<p id='" + product + "'>" + product + "</p>"
+        html_source += "<option id='" + product + "'>" + product + "</option>"
+    html_source += "</select>"
     $('#products .content').html(html_source)
 
   # Listen for new messages and append them to the screen
