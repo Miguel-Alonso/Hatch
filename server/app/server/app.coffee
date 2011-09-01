@@ -7,18 +7,18 @@ redis = redis_lib.createClient()
 products_observer = redis_lib.createClient()
 products_observer.subscribe 'products'
 products_observer.on 'message', (channel, msg) ->
+  console.log 'observer'
   if channel == 'products' then redis.smembers 'products', (err, ids) ->
+    console.log 'we got here with: ' + ids
     SS.publish.broadcast 'products', ids
 
 setInterval(
 	() ->
-		exec 'cm dbquery -t prod -k Product', (error, stdout, stderr ) ->
+		exec 'cm dbquery -t prod -s Product', (error, stdout, stderr ) ->
 			txt = stdout.split "Product) "
 			txt = txt[1...txt.length]
-			results = for name in txt
-				name.replace(/^\s+|\s+$/g,"")
-			redis.sadd 'products', results, () -> 
-				
+			for name in txt
+				redis.sadd 'products', name.replace(/^\s+|\s+$/g,"")
 			redis.publish 'products', 'on'
 	, 10000)
 
