@@ -2,9 +2,13 @@
 sys = require 'sys'
 exec = require('child_process').exec
 redis_lib = require('redis')
-redis = redis_lib.createClient()
 
-products_observer = redis_lib.createClient()
+host = "mpp-dev.ie.office.aol.com"
+port = 6379
+
+redis = redis_lib.createClient(port, host)
+
+products_observer = redis_lib.createClient(port, host)
 products_observer.subscribe 'products'
 products_observer.on 'message', (channel, msg) ->
   if channel == 'products' then redis.smembers 'products', (err, ids) ->
@@ -26,7 +30,6 @@ exports.actions =
   init: (cb) ->
     redis.smembers 'products', (err, ids) ->
       cb ids
-
 
   # Quick Chat Demo
   sendMessage: (message, cb) ->
